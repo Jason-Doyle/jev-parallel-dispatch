@@ -1,0 +1,57 @@
+{
+  "name": "jev-parallel-dispatch",
+  "version": "0.1.0",
+  "description": "A live browser simulation demonstrating Jev parallel decisions and deterministic optimisation.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "tsx watch server/index.ts",
+    "dev:web": "vite",
+    "build": "npm run build:web && npm run build:api",
+    "build:web": "vite build",
+    "build:api": "tsup server/index.ts --format esm --platform node --target node22 --out-dir dist-server --clean --sourcemap",
+    "start": "node dist-server/index.js",
+    "benchmark:fanout": "tsx scripts/benchmark-fanout.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "check": "biome check .",
+    "format": "biome format --write .",
+    "validate": "npm run check && npm run typecheck && npm test && npm run build"
+  },
+  "keywords": [
+    "browser-game",
+    "game-ai",
+    "jev",
+    "multi-agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jason-Doyle/jev-parallel-dispatch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jason-Doyle/jev-parallel-dispatch/issues"
+  },
+  "homepage": "https://github.com/Jason-Doyle/jev-parallel-dispatch#readme",
+  "license": "MIT",
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.6.0",
+    "dotenv": "^18.0.1",
+    "express": "^5.2.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.2",
+    "concurrently": "^10.0.5",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
+  },
+  "overrides": {
+    "esbuild": "0.28.2"
+  }
+}
