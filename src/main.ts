@@ -238,7 +238,7 @@ app.innerHTML = `
                 <th>Median latency</th>
                 <th>Decisions / second</th>
                 <th>Median input tokens</th>
-                <th>Cost for 3 runs</th>
+                <th>Total measured cost</th>
                 <th>Capacity violations</th>
                 <th>20s branch J / L / T</th>
                 <th>Median severity delta</th>
@@ -250,8 +250,8 @@ app.innerHTML = `
           </table>
         </div>
         <p class="metric-warning">
-          Three fresh Jev calls were measured at each scale. Results describe this machine,
-          network path, prompt, and model version. Raw responses are retained in
+          Fresh Jev calls were measured at each scale. Results describe this machine, network
+          path, prompt, and model version. Raw responses are retained in
           <code>evidence\\fanout-benchmark.json</code>.
         </p>
       </article>
@@ -283,6 +283,8 @@ const waveSummary = requireElement<HTMLDivElement>("wave-summary");
 const benchmarkMeta = requireElement<HTMLSpanElement>("benchmark-meta");
 const benchmarkRows = requireElement<HTMLTableSectionElement>("benchmark-rows");
 const canvas = requireElement<HTMLCanvasElement>("crisis-canvas");
+
+applyQueryDefaults();
 
 let serverStatus: ServerStatus | null = null;
 let currentMetrics: CrisisFrameMetrics | null = null;
@@ -322,6 +324,24 @@ resetButton.addEventListener("click", resetWorld);
 downloadButton.addEventListener("click", downloadSession);
 
 void initialise();
+
+function applyQueryDefaults(): void {
+  const parameters = new URLSearchParams(window.location.search);
+  const teams = parameters.get("teams");
+  if (teams && ["8", "16", "32", "48"].includes(teams)) {
+    unitCountSelect.value = teams;
+    dispatchButton.textContent = `Dispatch ${teams} teams`;
+  }
+
+  const speed = parameters.get("speed");
+  if (speed && ["1", "2", "4", "8"].includes(speed)) {
+    speedSelect.value = speed;
+  }
+
+  if (parameters.get("auto") === "0") {
+    autoDispatchInput.checked = false;
+  }
+}
 
 async function initialise(): Promise<void> {
   try {

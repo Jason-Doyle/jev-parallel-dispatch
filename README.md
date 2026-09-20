@@ -1,5 +1,13 @@
 # Jev Parallel Dispatch
 
+[![CI](https://github.com/Jason-Doyle/jev-parallel-dispatch/actions/workflows/ci.yml/badge.svg)](https://github.com/Jason-Doyle/jev-parallel-dispatch/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Jason-Doyle/jev-parallel-dispatch/actions/workflows/codeql.yml/badge.svg)](https://github.com/Jason-Doyle/jev-parallel-dispatch/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-737b82.svg)](LICENSE)
+
+[![Jev Parallel Dispatch demo](media/jev-parallel-dispatch.png)](https://github.com/Jason-Doyle/jev-parallel-dispatch/releases/download/v0.1.0/jev-parallel-dispatch-demo.mp4)
+
+[Watch the 33-second demo recording](https://github.com/Jason-Doyle/jev-parallel-dispatch/releases/download/v0.1.0/jev-parallel-dispatch-demo.mp4).
+
 Jev Parallel Dispatch is a browser simulation for testing high-volume typed decisions
 against a shared, changing game state.
 
@@ -126,17 +134,36 @@ The test suite covers deterministic replay, role distribution, capacity enforcem
 under adversarial model preferences, identical-snapshot counterfactuals, the HTTP API,
 and the official TypeSafe SDK transport.
 
+## Capture the demo
+
+The capture script builds the production application, starts it on a temporary local
+port, records a 48-team Jev run in Chromium, and converts the result to MP4.
+
+Requirements:
+
+- `TYPESAFE_API_KEY` in `.env`.
+- Chromium installed through Playwright.
+- `ffmpeg` available on `PATH`.
+
+```bash
+npx playwright install chromium
+npm run capture:demo
+```
+
+The screenshot is written to `media/jev-parallel-dispatch.png`. The MP4 is ignored by
+Git and is intended for a GitHub release asset.
+
 ## Retained benchmark evidence
 
 `evidence/fanout-benchmark.json` contains the raw Jev responses, local assignments, and
-counterfactual outcomes from three calls at each scale.
+counterfactual outcomes from ten calls at each scale.
 
 | Teams | Questions | Median latency | Decisions/s | Input tokens | Jev/local/tie branches | Median severity delta |
 |---:|---:|---:|---:|---:|---:|---:|
-| 8 | 11 | 213.760 ms | 37.425 | 6,683 | 0 / 1 / 2 | 0.000 |
-| 16 | 19 | 175.222 ms | 91.313 | 12,127 | 2 / 1 / 0 | -13.345 |
-| 32 | 35 | 227.969 ms | 140.370 | 23,017 | 2 / 1 / 0 | -2.948 |
-| 48 | 51 | 335.955 ms | 142.876 | 33,887 | 3 / 0 / 0 | -9.258 |
+| 8 | 11 | 151.196 ms | 52.913 | 6,683.5 | 3 / 2 / 5 | 0.000 |
+| 16 | 19 | 176.671 ms | 90.599 | 12,127.5 | 9 / 1 / 0 | -14.336 |
+| 32 | 35 | 263.192 ms | 121.731 | 23,017.5 | 7 / 3 / 0 | -2.406 |
+| 48 | 51 | 311.169 ms | 154.259 | 33,887.5 | 5 / 5 / 0 | 0.478 |
 
 All 12 recorded calls had zero capacity violations. Negative severity delta favours
 Jev.
@@ -144,7 +171,7 @@ Jev.
 Re-run the benchmark with:
 
 ```bash
-npm run benchmark:fanout -- --units 8,16,32,48 --repetitions 3
+npm run benchmark:fanout -- --units 8,16,32,48 --repetitions 10
 ```
 
 This command makes paid Jev calls.
@@ -154,9 +181,9 @@ This command makes paid Jev calls.
 The simulation is synthetic. Its incident priorities and role-effectiveness table are
 implemented assumptions, not emergency-response policy.
 
-Three scenarios per scale are not enough to claim that Jev is better than the local
+Ten scenarios per scale are still not enough to claim that Jev is better than the local
 dispatcher. The retained data supports claims about the recorded latency, throughput,
-capacity-safe composition, and counterfactual outcomes only.
+capacity-safe composition, and those counterfactual outcomes only.
 
 ## License
 
