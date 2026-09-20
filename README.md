@@ -100,6 +100,9 @@ evaluates all questions against the same state. The dispatcher then:
 4. Solves a maximum-weight assignment across all teams and slots.
 5. Returns both the model's top choice and the applied assignment.
 
+The server limits all API traffic to 120 requests per minute per client. Dispatch calls
+have a separate limit of 20 requests per minute to bound paid model usage.
+
 When Jev mode is active, the browser also evaluates the local policy from the same
 snapshot. Both plans are simulated for 20 seconds with identical future incident
 arrivals. The comparison ranks outcomes in this order:

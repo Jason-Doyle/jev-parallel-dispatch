@@ -89,6 +89,34 @@ describe("HTTP API", () => {
       questions: 35,
     });
   });
+
+  it("rate limits dispatch requests", async () => {
+    const { rootDirectory, baseUrl } = await startTestApplication();
+    cleanupDirectories.push(rootDirectory);
+    const snapshot = createCrisisSnapshot(4, 445);
+    const request = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        snapshot,
+        doctrine: "Protect civilians.",
+        mode: "local",
+      }),
+    };
+
+    for (let index = 0; index < 20; index += 1) {
+      const response = await fetch(`${baseUrl}/api/dispatch`, request);
+      expect(response.status).toBe(200);
+    }
+
+    const limited = await fetch(`${baseUrl}/api/dispatch`, request);
+    expect(limited.status).toBe(429);
+    await expect(limited.json()).resolves.toEqual({
+      error: "Dispatch request limit exceeded. Try again shortly.",
+    });
+  });
 });
 
 async function startTestApplication(
