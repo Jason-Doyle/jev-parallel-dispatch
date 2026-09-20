@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import express, { type NextFunction, type Request, type Response } from "express";
+import { rateLimit } from "express-rate-limit";
 import { ZodError, z } from "zod";
 import { CrisisSnapshotSchema } from "../src/shared/crisis";
 import type { ServerStatus } from "../src/shared/decision-types";
@@ -36,9 +37,28 @@ export function createApplication(options: ApplicationOptions = {}): express.Exp
       })
     : undefined;
   const app = express();
+  const apiRateLimit = rateLimit({
+    windowMs: 60_000,
+    limit: 120,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: {
+      error: "API request limit exceeded. Try again shortly.",
+    },
+  });
+  const dispatchRateLimit = rateLimit({
+    windowMs: 60_000,
+    limit: 20,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: {
+      error: "Dispatch request limit exceeded. Try again shortly.",
+    },
+  });
 
   app.disable("x-powered-by");
   app.use(express.json({ limit: "64kb" }));
+  app.use("/api", apiRateLimit);
 
   app.get("/api/status", (_request, response) => {
     const status: ServerStatus = {
@@ -64,7 +84,7 @@ export function createApplication(options: ApplicationOptions = {}): express.Exp
     }
   });
 
-  app.post("/api/dispatch", async (request, response) => {
+  app.post("/api/dispatch", dispatchRateLimit, async (request, response) => {
     const input = DispatchRequestSchema.parse(request.body);
 
     if (input.mode === "jev" && !jevClient) {
