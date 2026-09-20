@@ -6,3 +6,6 @@ coverage/
 !.env.example
 *.log
 .DS_Store
+.capture/
+media/*.mp4
+media/*.webm

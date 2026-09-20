@@ -1,13 +1,6 @@
 {
   "files": {
-    "includes": [
-      "**",
-      "!!dist",
-      "!!dist-server",
-      "!!coverage",
-      "!!node_modules",
-      "!!artifacts/designs/*.json"
-    ]
+    "includes": ["**", "!!dist", "!!dist-server", "!!coverage", "!!node_modules", "!!evidence"]
   },
   "vcs": {
     "enabled": true,

@@ -17,7 +17,7 @@ const client = new JevClient({
   model,
 });
 const unitCounts = parseUnitCounts(argumentValue("--units") ?? "8,16,32,48");
-const repetitions = boundedInteger(argumentValue("--repetitions") ?? "3", 1, 20);
+const repetitions = boundedInteger(argumentValue("--repetitions") ?? "10", 1, 20);
 const doctrine =
   "Protect civilians first. Match specialists to incidents, avoid overcommitting, and preserve tired teams for later emergencies.";
 const rawRuns: Array<{
