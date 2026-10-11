@@ -37,22 +37,22 @@
   "license": "MIT",
   "dependencies": {
     "@typesafe-ai/sdk": "^0.6.0",
-    "dotenv": "^18.0.1",
+    "dotenv": "^18.0.6",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.7.0",
+    "express-rate-limit": "^8.7.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.14",
+    "@biomejs/biome": "^2.5.15",
     "@types/express": "^5.0.6",
-    "@types/node": "^26.6.2",
-    "concurrently": "^10.0.5",
-    "playwright": "^1.63.0",
+    "@types/node": "^26.6.4",
+    "concurrently": "^10.0.6",
+    "playwright": "^1.64.0",
     "tsup": "^8.5.1",
-    "tsx": "^4.23.13",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "^8.3.0",
-    "vitest": "^5.0.1"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
   },
   "overrides": {
     "esbuild": "0.28.2"
